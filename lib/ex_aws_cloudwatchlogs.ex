@@ -3,12 +3,9 @@ defmodule ExAws.CloudWatchLogs do
   Documentation for ExAws.CloudWatchLogs.
   """
 
-  use ExAws.Utils,
-    format_type: :xml,
-    non_standard_keys: %{}
-
   # version of the AWS API
-  @version "2014-03-28"
+  @version "20140328"
+  @namespace "Logs"
 
   @type tag :: %{key: binary, value: binary}
 
@@ -30,47 +27,79 @@ defmodule ExAws.CloudWatchLogs do
           kms_key_id: binary,
           tags: [tag, ...]
         }
-  @spec create_log_group(log_group_name :: binary) :: ExAws.Operation.Query.t()
+  @spec create_log_group(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec create_log_group(log_group_name :: binary, create_log_group_opts) ::
-          ExAws.Operation.Query.t()
+          ExAws.Operation.JSON.t()
   def create_log_group(log_group_name, opts \\ []) do
-    [{:log_group_name, log_group_name} | opts]
-    |> build_request(:create_log_group)
+    opts
+    |> camelize_keyword()
+    |> Map.merge(%{"logGroupName" => log_group_name})
+    |> request(:create_log_group)
   end
 
   @spec create_log_stream(log_group_name :: binary, log_stream_name :: binary) ::
-          ExAws.Operation.Query.t()
+          ExAws.Operation.JSON.t()
   def create_log_stream(log_group_name, log_stream_name) do
-    [{:log_group_name, log_group_name}, {:log_stream_name, log_stream_name}]
-    |> build_request(:create_log_stream)
+    %{
+      "logGroupName" => log_group_name,
+      "logStreamName" => log_stream_name
+    }
+    |> request(:create_log_stream)
   end
 
   ####################
   # Helper Functions #
   ####################
 
-  defp build_request(opts, action) do
-    opts
-    |> Enum.flat_map(&format_param/1)
-    |> request(action)
+  defp request(data, action) do
+    operation = action |> Atom.to_string() |> Macro.camelize()
+
+    ExAws.Operation.JSON.new(
+      :logs,
+      %{
+        data: data,
+        headers: [
+          {"x-amz-target", "#{@namespace}_#{@version}.#{operation}"},
+          {"content-type", "application/x-amz-json-1.1"}
+        ]
+      }
+    )
   end
 
-  defp format_param({key, parameters}) do
-    format([{key, parameters}])
+  # The API wants keywords in lower camel case format
+  # this function works thru a KeyWord which may have one
+  # layer of KeyWord within it and builds a map where keys
+  # are in this format.
+  #
+  # [test: [my_key: "val"]] becomes %{"test" => %{"myKey" => "val"}}
+  defp camelize_keyword(a_list) when is_list(a_list) or is_map(a_list) do
+    case Keyword.keyword?(a_list) or is_map(a_list) do
+      true ->
+        a_list
+        |> Enum.reduce(%{}, fn {k, v}, acc ->
+          k_str =
+            case is_atom(k) do
+              true ->
+                k |> Atom.to_string() |> Macro.camelize() |> decap()
+
+              false ->
+                k
+            end
+
+          Map.put(acc, k_str, camelize_keyword(v))
+        end)
+
+      false ->
+        a_list
+        |> Enum.reduce([], fn item, acc -> [camelize_keyword(item) | acc] end)
+        |> Enum.reverse()
+    end
   end
 
-  defp request(params, action) do
-    action_string = action |> Atom.to_string() |> Macro.camelize()
+  defp camelize_keyword(val), do: val
 
-    %ExAws.Operation.Query{
-      path: "/",
-      params:
-        params
-        |> filter_nil_params
-        |> Map.put("Action", action_string)
-        |> Map.put("Version", @version),
-      service: :logs,
-      action: action
-    }
+  defp decap(str) do
+    first = String.slice(str, 0..0) |> String.downcase()
+    first <> String.slice(str, 1..-1)
   end
 end
