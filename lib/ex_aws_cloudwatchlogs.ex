@@ -47,6 +47,44 @@ defmodule ExAws.CloudWatchLogs do
     |> request(:create_log_stream)
   end
 
+  @doc """
+  Lists the specified log groups. You can list all your log groups or filter the results by prefix. The results are ASCII-sorted by log group name.
+  """
+  @type describe_log_groups_opts :: %{
+          log_group_name_prefix: binary,
+          next_token: binary,
+          limit: integer
+        }
+  @spec describe_log_groups() :: ExAws.Operation.JSON.t()
+  @spec describe_log_groups(describe_log_groups_opts) :: ExAws.Operation.JSON.t()
+  def describe_log_groups(opts \\ []) do
+    opts
+    |> camelize_keyword()
+    |> request(:describe_log_groups)
+  end
+
+  @doc """
+  Lists the log streams for the specified log group. You can list all the log streams or filter the results by prefix. You can also control how the results are ordered.
+
+  This operation has a limit of five transactions per second, after which transactions are throttled.
+  """
+  @type describe_log_streams_opts :: %{
+          log_stream_name_prefix: binary,
+          order_by: binary,
+          descending: boolean,
+          next_token: binary,
+          limit: integer
+        }
+  @spec describe_log_streams(log_group_name :: binary) :: ExAws.Operation.JSON.t()
+  @spec describe_log_streams(log_group_name :: binary, describe_log_streams_opts) ::
+          ExAws.Operation.JSON.t()
+  def describe_log_streams(log_group_name, opts \\ []) do
+    opts
+    |> camelize_keyword()
+    |> Map.merge(%{"logGroupName" => log_group_name})
+    |> request(:describe_log_streams)
+  end
+
   ####################
   # Helper Functions #
   ####################
