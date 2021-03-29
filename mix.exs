@@ -1,7 +1,7 @@
 defmodule ExAws.CloudWatchLogs.MixProject do
   use Mix.Project
 
-  @version "1.0.0"
+  @version "1.0.1"
 
   def project do
     [
@@ -33,7 +33,8 @@ defmodule ExAws.CloudWatchLogs.MixProject do
     [
       {:hackney, "1.6.3 or 1.6.5 or 1.7.1 or 1.8.6 or ~> 1.9", only: [:dev, :test]},
       {:ex_doc, "~> 0.19.2", only: [:dev, :test]},
-      {:ex_aws, "~> 2.0"}
+      {:ex_aws, "~> 2.0"},
+      {:poison, ">= 1.2.0"}
     ]
   end
 
