@@ -121,11 +121,11 @@ defmodule ExAws.CloudWatchLogs do
         }
 
   """
-  @type create_export_task_opts :: %{
-          task_name: binary,
-          log_stream_name_prefix: binary,
-          destination_prefix: binary
-        }
+  @type create_export_task_opts :: [
+          {:task_name, binary}
+          | {:log_stream_name_prefix, binary}
+          | {:destination_prefix, binary}
+        ]
   @spec create_export_task(
           log_group_name :: binary,
           from_time :: integer,
@@ -183,10 +183,10 @@ defmodule ExAws.CloudWatchLogs do
           stream_builder: nil
         }
   """
-  @type create_log_group_opts :: %{
-          kms_key_id: binary,
-          tags: [tag, ...]
-        }
+  @type create_log_group_opts :: [
+          {:kms_key_id, binary}
+          | {:tags, [tag, ...]}
+        ]
   @spec create_log_group(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec create_log_group(log_group_name :: binary, create_log_group_opts) ::
           ExAws.Operation.JSON.t()
@@ -486,11 +486,11 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_destinations_opts :: %{
-          destination_name_prefix: binary,
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_destinations_opts :: [
+          {:destination_name_prefix, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_destinations() :: ExAws.Operation.JSON.t()
   @spec describe_destinations(describe_destinations_opts) :: ExAws.Operation.JSON.t()
   def describe_destinations(opts \\ []) do
@@ -521,12 +521,12 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_export_tasks_opts :: %{
-          task_id: binary,
-          status_code: binary,
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_export_tasks_opts :: [
+          {:task_id, binary}
+          | {:status_code, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_export_tasks() :: ExAws.Operation.JSON.t()
   @spec describe_export_tasks(describe_export_tasks_opts) :: ExAws.Operation.JSON.t()
   def describe_export_tasks(opts \\ []) do
@@ -557,11 +557,11 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_log_groups_opts :: %{
-          log_group_name_prefix: binary,
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_log_groups_opts :: [
+          {:log_group_name_prefix, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_log_groups() :: ExAws.Operation.JSON.t()
   @spec describe_log_groups(describe_log_groups_opts) :: ExAws.Operation.JSON.t()
   def describe_log_groups(opts \\ []) do
@@ -594,13 +594,13 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_log_streams_opts :: %{
-          log_stream_name_prefix: binary,
-          order_by: binary,
-          descending: boolean,
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_log_streams_opts :: [
+          {:log_stream_name_prefix, binary}
+          | {:order_by, binary}
+          | {:descending, boolean}
+          | {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_log_streams(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec describe_log_streams(log_group_name :: binary, describe_log_streams_opts) ::
           ExAws.Operation.JSON.t()
@@ -633,14 +633,14 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_metric_filters_opts :: %{
-          log_group_name: binary,
-          filter_name_prefix: binary,
-          next_token: binary,
-          limit: integer,
-          metric_name: binary,
-          metric_namespace: binary
-        }
+  @type describe_metric_filters_opts :: [
+          {:log_group_name, binary}
+          | {:filter_name_prefix, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+          | {:metric_name, binary}
+          | {:metric_namespace, binary}
+        ]
   @spec describe_metric_filters() :: ExAws.Operation.JSON.t()
   @spec describe_metric_filters(describe_metric_filters_opts) :: ExAws.Operation.JSON.t()
   def describe_metric_filters(opts \\ []) do
@@ -671,12 +671,12 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_queries_opts :: %{
-          log_group_name: binary,
-          status: binary,
-          max_results: integer,
-          next_token: binary
-        }
+  @type describe_queries_opts :: [
+          {:log_group_name, binary}
+          | {:status, binary}
+          | {:max_results, integer}
+          | {:next_token, binary}
+        ]
   @spec describe_queries() :: ExAws.Operation.JSON.t()
   @spec describe_queries(describe_queries_opts) :: ExAws.Operation.JSON.t()
   def describe_queries(opts \\ []) do
@@ -707,10 +707,10 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_resource_policies_opts :: %{
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_resource_policies_opts :: [
+          {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_resource_policies() :: ExAws.Operation.JSON.t()
   @spec describe_resource_policies(describe_resource_policies_opts) :: ExAws.Operation.JSON.t()
   def describe_resource_policies(opts \\ []) do
@@ -741,11 +741,11 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type describe_subscription_filters_opts :: %{
-          filter_name_prefix: binary,
-          next_token: binary,
-          limit: integer
-        }
+  @type describe_subscription_filters_opts :: [
+          {:filter_name_prefix, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+        ]
   @spec describe_subscription_filters(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec describe_subscription_filters(
           log_group_name :: binary,
@@ -819,16 +819,16 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type filter_log_events_opts :: %{
-          log_stream_names: [binary, ...],
-          log_stream_name_prefix: binary,
-          start_time: integer,
-          end_time: integer,
-          filter_pattern: binary,
-          next_token: binary,
-          limit: integer,
-          interleaved: boolean
-        }
+  @type filter_log_events_opts :: [
+          {:log_stream_names, [binary, ...]}
+          | {:log_stream_name_prefix, binary}
+          | {:start_time, integer}
+          | {:end_time, integer}
+          | {:filter_pattern, binary}
+          | {:next_token, binary}
+          | {:limit, integer}
+          | {:interleaved, boolean}
+        ]
   @spec filter_log_events(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec filter_log_events(log_group_name :: binary, filter_log_events_opts) ::
           ExAws.Operation.JSON.t()
@@ -866,13 +866,13 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type get_log_events_opts :: %{
-          start_time: integer,
-          end_time: integer,
-          next_token: binary,
-          limit: integer,
-          start_from_head: boolean
-        }
+  @type get_log_events_opts :: [
+          {:start_time, integer}
+          | {:end_time, integer}
+          | {:next_token, binary}
+          | {:limit, integer}
+          | {:start_from_head, boolean}
+        ]
   @spec get_log_events(log_group_name :: binary, log_stream_name :: binary) ::
           ExAws.Operation.JSON.t()
   @spec get_log_events(log_group_name :: binary, log_stream_name :: binary, get_log_events_opts) ::
@@ -910,9 +910,9 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type get_log_group_fields_opts :: %{
-          time: integer
-        }
+  @type get_log_group_fields_opts :: [
+          {:time, integer}
+        ]
   @spec get_log_group_fields(log_group_name :: binary) :: ExAws.Operation.JSON.t()
   @spec get_log_group_fields(log_group_name :: binary, get_log_group_fields_opts) ::
           ExAws.Operation.JSON.t()
@@ -1139,9 +1139,9 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type put_log_events_opts :: %{
-          sequence_token: binary
-        }
+  @type put_log_events_opts :: [
+          {:sequence_token, binary}
+        ]
   @spec put_log_events(
           log_group_name :: binary,
           log_stream_name :: binary,
@@ -1314,10 +1314,10 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type put_subscription_filter_opts :: %{
-          role_arn: binary,
-          distribution: binary
-        }
+  @type put_subscription_filter_opts :: [
+          {:role_arn, binary}
+          | {:distribution, binary}
+        ]
   @spec put_subscription_filter(
           log_group_name :: binary,
           filter_name :: binary,
@@ -1405,9 +1405,9 @@ defmodule ExAws.CloudWatchLogs do
         stream_builder: nil
       }
   """
-  @type start_query_opts :: %{
-          limit: integer
-        }
+  @type start_query_opts :: [
+          {:limit, integer}
+        ]
   @spec start_query(
           log_group_name :: binary,
           start_time :: integer,
